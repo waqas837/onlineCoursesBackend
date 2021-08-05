@@ -10,11 +10,14 @@ app.listen(Port, () => {
 
 //database connection
 mongoose
-  .connect("mongodb://localhost/onlinecourses", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-  })
+  .connect(
+    "mongodb+srv://online:online@cluster0.dstks.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useFindAndModify: false,
+    }
+  )
   .then(() => console.log("Database connected"))
   .catch((err) => console.log(`DB connection failed ${err}`));
 mongoose.set("useNewUrlParser", true);

@@ -40,7 +40,7 @@ app.use("/public\\images\\", express.static(path.join("public/images/")));
 app.use(cookieParser());
 
 app.get("/", (req, res) => {
-  res.send("welcome to backend");
+  res.send("welcome to Learn online course express js");
 });
 // const ApiRateLimit = ratelimit({
 //   max: 1,

@@ -9,7 +9,15 @@ const genToken = (id) => {
 // user signup
 exports.signup = asyncCatch(async (req, res) => {
   const { username, email, password, cpassword } = req.body;
+  console.log(password,cpassword);
   if (password === cpassword) {
+    //if user exists
+    const userAlreadyExists = await signUp.findOne({ email });
+    if (userAlreadyExists) {
+      res.json({
+        userExists: "User Already exists",
+      });
+    }
     const hashedPassword = await bcrypt.hash(password, 10);
     const userSignedup = await signUp.create({
       username,
@@ -21,26 +29,29 @@ exports.signup = asyncCatch(async (req, res) => {
     // console.log(token);
     if (userSignedup) {
       res.cookie("user", token);
-      res.json({
+      res.status(201).json({
         message: "Account created Successfuly",
         userDetails: userSignedup,
       });
     }
   } else {
-    res.json({ message: "Password and Confirm passowrd must be same" });
+    res.json({ ErrorMessage: "Password and Confirm password must be same" });
   }
 });
 // user login
 exports.login = asyncCatch(async (req, res) => {
   const { email, password } = req.body;
   const findUser = await signUp.findOne({ email });
-  const hashedPassword = await bcrypt.compare(password, findUser.password);
-  console.log(hashedPassword);
-  if (findUser && hashedPassword) {
-    const token = genToken(findUser._id);
-    res.cookie("user", token);
-    res
-      .status(200)
-      .json({ message: "successfully logged in", userDetails: findUser });
+  if (findUser) {
+    const hashedPassword = await bcrypt.compare(password, findUser.password);
+    if (findUser && hashedPassword) {
+      const token = genToken(findUser._id);
+      res.cookie("user", token);
+      res
+        .status(200)
+        .json({ message: "successfully logged in", userDetails: findUser });
+    }
+  } else if (!findUser && !hashedPassword) {
+    res.json({ invalidUser: "Invalid email or passowrd" });
   }
 });
