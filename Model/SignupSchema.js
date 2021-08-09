@@ -23,5 +23,9 @@ const userSignup = mongoose.Schema({
   cpassword: {
     type: String,
   },
+  status: {
+    type: Boolean,
+    default: true,
+  },
 });
 module.exports = mongoose.model("User", userSignup);

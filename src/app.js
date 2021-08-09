@@ -10,6 +10,7 @@ const hppSecurity = require("hpp");
 // const ratelimit = require("express-rate-limit");
 const appError = require("../Utils/appErrors");
 const userRoutes = require("../Routes/UserRoutes");
+const courseRoutes = require("../Routes/CourseRoutes");
 //related to the like database is down/any other problem
 // process.on("uncaughtException", (err) => {
 //   console.log(`server is shutting down...`);
@@ -48,7 +49,8 @@ app.get("/", (req, res) => {
 //   windowMs: 60 * 24 * 60 * 1000, //time to take a rest
 //   message: "Api Request Rate limit exceeded,Try again in an hour",
 // });
-app.use("/user", userRoutes);
+app.use("/api/user", userRoutes);
+app.use("/api/courses", courseRoutes);
 //except the above routes,let's caught it
 app.all("*", (req, res, next) => {
   next(new appError(`Can't find ${req.originalUrl} on server`, 404));

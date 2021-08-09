@@ -1,4 +1,5 @@
-const signUp = require("../Model/SignupModel");
+const signUp = require("../Model/SignupSchema");
+const Admin = require("../Model/AdminSchema");
 const asyncCatch = require("../Utils/asyncCatch");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
@@ -9,7 +10,7 @@ const genToken = (id) => {
 // user signup
 exports.signup = asyncCatch(async (req, res) => {
   const { username, email, password, cpassword } = req.body;
-  console.log(password,cpassword);
+  console.log(password, cpassword);
   if (password === cpassword) {
     //if user exists
     const userAlreadyExists = await signUp.findOne({ email });
@@ -39,6 +40,28 @@ exports.signup = asyncCatch(async (req, res) => {
   }
 });
 // user login
+exports.adminlogin = asyncCatch(async (req, res) => {
+  const { email, password } = req.body;
+  const findUser = await Admin.findOne({ email });
+  if (!findUser) {
+    {
+      res.json({ invalidUser: "Invalid email or passowrd" });
+    }
+  } else if (findUser) {
+    const hashedPassword = await bcrypt.compare(password, findUser.password);
+    if (!hashedPassword) {
+      res.json({ invalidUser: "Invalid email or passowrd" });
+    } else if (findUser && hashedPassword) {
+      const token = genToken(findUser._id);
+      res.cookie("admin", token);
+      res
+        .status(200)
+        .json({ message: "successfully logged in", userDetails: findUser });
+    }
+  }
+});
+
+// admin login
 exports.login = asyncCatch(async (req, res) => {
   const { email, password } = req.body;
   const findUser = await signUp.findOne({ email });
