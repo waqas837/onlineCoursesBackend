@@ -6,11 +6,13 @@ const courseSchema = mongoose.Schema({
   instructorimage: String,
   courselevel: {
     type: Array,
-    // unique: true,
+    default: ["Easy", "Intermediate", "Advanced"],
   },
   language: {
     type: Array,
-    // unique: true,
+    default: ["English", "Urdu", "Hindi"],
   },
+  level: String,
+  lang: String,
 });
 module.exports = mongoose.model("Course", courseSchema);
