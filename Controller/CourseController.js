@@ -115,3 +115,23 @@ exports.addFinallyLanguageToCourse = asycCatch(async (req, res) => {
     res.status(404).json({ message: "Data failed to language in database" });
   }
 });
+
+//8.add a profile picture of instructor
+exports.addInstructorProfile = asycCatch(async (req, res) => {
+  const { _id } = req.params;
+  console.log(_id, lang);
+  const findData = await CourseModel.findByIdAndUpdate(
+    { _id },
+    { lang },
+    { new: true }
+  );
+  if (findData) {
+    res.status(200).json({ success: true, findData });
+  } else {
+    res
+      .status(404)
+      .json({
+        message: "Data failed to upload instructor profile in database",
+      });
+  }
+});

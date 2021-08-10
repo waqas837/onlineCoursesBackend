@@ -1,6 +1,8 @@
 const courseController = require("../Controller/CourseController");
 const router = require("express").Router();
 const Auth = require("../Middleware/Auth");
+const upload = require("../Middleware/imgUpload");
+
 router.route("/addNewCourse").post(Auth, courseController.addNewCourse);
 router.route("/getAllCourseData").get(Auth, courseController.getAllCourseData);
 router
@@ -23,8 +25,12 @@ router
   .route("/addFinallyLevelToCourse/:_id/:level")
   .post(Auth, courseController.addFinallyLevelToCourse);
 
-  router
+router
   .route("/addFinallyLanguageToCourse/:_id/:lang")
   .post(Auth, courseController.addFinallyLanguageToCourse);
+
+router
+  .route("/addInstructorProfile/:_id",)
+  .pat(Auth , courseController.addInstructorProfile);
 
 module.exports = router;
