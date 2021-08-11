@@ -4,6 +4,7 @@ const helmet = require("helmet");
 const cookieParser = require("cookie-parser");
 const path = require("path");
 const cors = require("cors");
+// const fileUpload = require("express-fileupload")
 const mongoSanitizeSecurity = require("express-mongo-sanitize");
 const xsscleanSecurity = require("xss-clean");
 const hppSecurity = require("hpp");
@@ -22,6 +23,7 @@ const courseRoutes = require("../Routes/CourseRoutes");
 
 // const storyRouter = require('../Routes/storyRoutes');
 const app = express();
+// app.use(fileUpload());
 app.use(helmet()); //headers protection
 app.use(morgan("dev"));
 app.use(

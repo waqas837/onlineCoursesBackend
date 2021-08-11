@@ -30,7 +30,7 @@ router
   .post(Auth, courseController.addFinallyLanguageToCourse);
 
 router
-  .route("/addInstructorProfile/:_id",)
-  .pat(Auth , courseController.addInstructorProfile);
+  .route("/addInstructorProfile/:_id")
+  .post(Auth, upload.single("image"), courseController.addInstructorProfile);
 
 module.exports = router;

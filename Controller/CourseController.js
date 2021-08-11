@@ -1,8 +1,8 @@
 const CourseModel = require("../Model/CourseSchema");
 const asycCatch = require("../Utils/asyncCatch");
+const fs = require("fs");
 //1.add a new course
 exports.addNewCourse = asycCatch(async (req, res) => {
-  console.log(req.body);
   const data = await CourseModel.create(req.body);
   if (data) {
     res.status(200).json({ success: true, courses: data });
@@ -44,8 +44,21 @@ exports.getDefaultLanguages = asycCatch(async (req, res) => {
 //4.delete a coures
 exports.deleteAsingleCourse = asycCatch(async (req, res) => {
   const { _id } = req.params;
+  // first we find the data to remove profile
+  const findImage = await CourseModel.findById({ _id }).select(
+    "instructorimage"
+  );
+  // image path
+  const imagePath = findImage.instructorimage;
+  // and just unlink this path
+  if (imagePath) {
+    fs.unlink(imagePath, (err) => {
+      console.log(err);
+      return;
+    });
+  }
   const data = await CourseModel.findByIdAndDelete({ _id });
-  console.log(data);
+  // console.log(data);
   if (data) {
     res.status(200).json({ success: true, data });
   } else {
@@ -103,7 +116,7 @@ exports.addFinallyLevelToCourse = asycCatch(async (req, res) => {
 //7.add finally language to a course
 exports.addFinallyLanguageToCourse = asycCatch(async (req, res) => {
   const { _id, lang } = req.params;
-  console.log(_id, lang);
+  // console.log(_id, lang);
   const findData = await CourseModel.findByIdAndUpdate(
     { _id },
     { lang },
@@ -119,19 +132,17 @@ exports.addFinallyLanguageToCourse = asycCatch(async (req, res) => {
 //8.add a profile picture of instructor
 exports.addInstructorProfile = asycCatch(async (req, res) => {
   const { _id } = req.params;
-  console.log(_id, lang);
+  const instructorimage = req.file.path;
   const findData = await CourseModel.findByIdAndUpdate(
     { _id },
-    { lang },
+    { instructorimage },
     { new: true }
   );
   if (findData) {
     res.status(200).json({ success: true, findData });
   } else {
-    res
-      .status(404)
-      .json({
-        message: "Data failed to upload instructor profile in database",
-      });
+    res.status(404).json({
+      message: "Data failed to upload instructor profile in database",
+    });
   }
 });
